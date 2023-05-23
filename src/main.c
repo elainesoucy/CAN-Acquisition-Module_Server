@@ -24,7 +24,7 @@
 #include "user_io.h"
 #include "main.h"
 
-#define NUMBER_OF_ARGS 4 /* There should be 3 args plus the program call (= 4) */
+#define NUMBER_OF_ARGS 5 /* There should be 4 args plus the program call (= 5) */
 
 #define MIN_SAMPLE_INTERVAL 1 		/* Minimum sample interval in seconds */
 #define MAX_SAMPLE_INTERVAL 31536000	/* Max sample interval in seconds (one year, arbitrary) */
@@ -41,6 +41,10 @@ int main(int argc, char *argv[]) {
  * Third argument should be the path to the folder in which the program will place the output files
  *	ex.:"/home/hugo/Documents/AcqData"
  *
+ * Fourth argument should be the path to the folder in which the program will place the outut files
+ * for the insertion in the database. It's important to have the name of the localisation as the last folder
+ * in the file path
+ * ex. : "/home/hugo/Documents/CETAB" --> Data for CETAB localisation
 */
 
 	if(argc != NUMBER_OF_ARGS){
@@ -99,6 +103,11 @@ int main(int argc, char *argv[]) {
 	/* File info */
 	char path_and_filename[LONG_STRING_BUFF_LEN];/* 1024 characters limit on the file path, enforced by snprintf() */
 	FILE *fptr;
+	
+	// Ajout ************************************
+	char path_and_filename_for_database_insertion[STRING_BUFF_LEN];
+	FILE *fptr_for_database_insertion;
+	// ********************************************
 
 	measurement_t measurements_table[CAN_MAX_TOTAL_MESSAGES];/* this lists all the meas. that are available on CANbus and that we'll include in our .csv file (in order). */
 	uint32_t nb_of_measurements; /* Number of elements in the measurements_table */
@@ -158,6 +167,22 @@ int main(int argc, char *argv[]) {
 
 		}
 
+		// **** Ajout
+		// Générer le nom de fichier
+		snprintf(path_and_filename_for_database_insertion, STRING_BUFF_LEN, "%s/%s.csv", argv[4], time(&time_current));
+		fptr_for_database_insertion = fopen(path_and_filename_for_database_insertion, "w");
+		
+		if (fptr_for_database_insertion == NULL)
+		{
+			perror("Error ! Could not open file");
+			free(path_and_filename_for_database_insertion);
+			return EXIT_FAILURE;
+		}
+
+		write_file_header(fptr_for_database_insertion, measurements_table, nb_of_measurements)
+
+		// ********************************
+
 
 		time(&time_current); /* update time */
 		time_last_sample = time_current;
@@ -171,6 +196,10 @@ int main(int argc, char *argv[]) {
 		/*Print the Unix time (time_current as %ld) and the human-readable local time */
 		fprintf(fptr,"%ld, %04d-%02d-%02d_%02dh%02dm%02ds,", time_current, localtime_ptr->tm_year+1900, localtime_ptr->tm_mon+1, localtime_ptr->tm_mday, localtime_ptr->tm_hour, localtime_ptr->tm_min, localtime_ptr->tm_sec);
 
+		// Ajout *****************************************
+		fptr_for_database_insertion = fopen(path_and_filename_for_database_insertion, "a");
+		fprintf(fptr_for_database_insertion,"%ld, %04d-%02d-%02d_%02dh%02dm%02ds,", time_current, localtime_ptr->tm_year+1900, localtime_ptr->tm_mon+1, localtime_ptr->tm_mday, localtime_ptr->tm_hour, localtime_ptr->tm_min, localtime_ptr->tm_sec);
+		// *************************************************
 
 		CAN_SendSync(s);/* Send a CAN SYNC frame on the specified socket */
 		sleep(CAN_RECEPTION_TIME); /* Sleep for a second */
@@ -182,11 +211,19 @@ int main(int argc, char *argv[]) {
 
 			 CAN_GetMeasurementValueStr(measurements_table[i].channel, measurements_table[i].node_id, temp_string, STRING_BUFF_LEN);
 			 fprintf(fptr," %s,", temp_string);
+			 // Ajout ********************
+			 fprintf(fptr_for_database_insertion," %s,", temp_string);
+			 // Fin ajout ***************
 
 		}
 
 		fprintf(fptr,"\n");
 		fclose(fptr);
+
+		// Ajout *************************** 
+		fprintf(fptr_for_database_insertion,"\n");
+		fclose(fptr_for_database_insertion);
+		// Fin ajout *********************************
 
 		/* Print the progress status in the terminal*/
 		datapoints_acquired++;
@@ -199,6 +236,9 @@ int main(int argc, char *argv[]) {
 
 	// The 2 lines below should never execute because of while(1)
 	free(path_and_filename);
+	// Ajout **** 
+	free(path_and_filename_for_database_insertion);
+	// Fin ajout ****
 	return EXIT_SUCCESS;
 
 }
