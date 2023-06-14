@@ -16,11 +16,11 @@ INTERFACE="can0"
 BITRATE="125000" #kbits/second. This should match what's in the sensor module firmware. No autobaud for now...
 
 # Secondly, let's define where we want the program to put the datalogging files, and how often to take a sample
-LOCAL_DATALOGGING_PATH="/home/hugo/Documents/AcqData"
+LOCAL_DATALOGGING_PATH="/home/elaine/Documents/AcqData"
 DATALOGGING_SAMPLE_PERIOD="60" #seconds. Time interval between data samples from the sensors
 
 # Thirdly, let's define where, and how often the files are copied to the cloud
-REMOTE_NAME="onedrive" # This is the name of the (previously configured) remote cloud we want rclone to put the files on.
+REMOTE_NAME="onedriveElaine" # This is the name of the (previously configured) remote cloud we want rclone to put the files on.
 REMOTE_PATH="/AcqData/" # This is where we want rclone to put the files on the remote cloud.
 REMOTE_UPLOAD_PERIOD="300" #seconds. This is the amount of time between each uploads to the remote cloud.
 
