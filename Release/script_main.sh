@@ -24,8 +24,6 @@ REMOTE_NAME="onedriveElaine" # This is the name of the (previously configured) r
 REMOTE_PATH="/AcqData/" # This is where we want rclone to put the files on the remote cloud.
 REMOTE_UPLOAD_PERIOD="300" #seconds. This is the amount of time between each uploads to the remote cloud.
 
-
-
 # Boilerplate to change the directory of execution to the directory where this script is
 export DIRNAME="$(dirname "$(readlink -f "$0")")"
 cd "$DIRNAME"
@@ -36,9 +34,18 @@ cd "$DIRNAME"
 sudo ip link set $INTERFACE type can bitrate $BITRATE
 sudo ip link set up $INTERFACE
 
+# à la place d'aller chercher le directory au complet, on va chercher tous les noms de fichiers qui sont présents
+# dans le dossier en ce moment, comme ça on en skip pas. 
+# FILES_TO_UPDLOAD="/home/elaine/Documents/AcqData/*.csv"
+# Ensuite, on copie chacun de ces fichiers un par un dans le dossier drive avec rclone
+
+# puis ensuite, on supprime dans le dossier local les fichiers qu'on avait dans le dossier à la base 
+# (comme ça on supprime pas un fichier qu'on a pas eu le temps de rclone)
+
 # Then, start the sript that syncs to the cloud in a new terminal
 gnome-terminal -- ./script_synctocloud.sh $LOCAL_DATALOGGING_PATH $REMOTE_NAME $REMOTE_PATH $REMOTE_UPLOAD_PERIOD
 
+# on peut supprimer les fichiers dans le dossier qu'on vient 
 # Finally, start the datalogging program
 ./CAN-Acquisition-Module_Server $INTERFACE $DATALOGGING_SAMPLE_PERIOD $LOCAL_DATALOGGING_PATH 
 
