@@ -8,16 +8,17 @@ do
   # On déclare un tableau qui contient tous les noms de fichier .csv dans le dossier 
   declare -a filename_list
 
-  for filename in "$1"/*.csv
+  filenames=`ls $1/*.csv`
+  for file in $filenames
     # on veut ajouter le nom du fichier à un tableau
-    echo $filename
-    filename_list+=("$filename")
-    path_of_file="$1/$filename"
+    echo $file
+    filename_list+=("$file")
+    path_of_file="$1/$file"
     # on veut rclone ce fichier
     rclone copy $path_of_file $2:$3
     sleep 200
     # supprimer le fichier dans le dossier local
-    unlink $filename
+    unlink $file
 
   #rclone copy $1 $2:$3
   #sleep 300
