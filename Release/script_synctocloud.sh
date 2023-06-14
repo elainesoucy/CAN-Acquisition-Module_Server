@@ -1,8 +1,5 @@
 #!/bin/bash  
 
-# Then, start the sript that syncs to the cloud in a new terminal
-gnome-terminal -- ./script_synctocloud.sh $LOCAL_DATALOGGING_PATH $REMOTE_NAME $REMOTE_PATH $REMOTE_UPLOAD_PERIOD
-
 while true  
 do  
   echo "Synching to Onedrive now..."
