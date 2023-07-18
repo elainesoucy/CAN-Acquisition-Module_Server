@@ -1,0 +1,14 @@
+!SESSION 2023-07-18 09:58:16.700 -----------------------------------------------
+eclipse.buildId=4.28.0.20230608-1200
+java.version=17.0.7
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_CA
+Framework arguments:  -product org.eclipse.epp.package.embedcpp.product
+Command-line arguments:  -os linux -ws gtk -arch x86_64 -product org.eclipse.epp.package.embedcpp.product
+
+!ENTRY org.eclipse.core.resources 4 77 2023-07-18 10:00:47.697
+!MESSAGE Invalid project description.
+!SUBENTRY 1 unknown 0 0 2023-07-18 10:00:47.697
+!MESSAGE OK
+!SUBENTRY 1 org.eclipse.core.resources 4 77 2023-07-18 10:00:47.697
+!MESSAGE /home/elaine/Downloads/CAN-Acquisition-Module_Server overlaps the workspace location: /home/elaine/Downloads/CAN-Acquisition-Module_Server

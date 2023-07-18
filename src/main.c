@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
  * Third argument should be the path to the folder in which the program will place the output files
  *	ex.:"/home/hugo/Documents/AcqData"
  *
- * Fourth argument should be the path to the folder in which the program will place the outut files
+ * Fourth argument should be the path to the folder in which the program will place the output files
  * for the insertion in the database. It's important to have the name of the localisation as the last folder
  * in the file path
  * ex. : "/home/hugo/Documents/CETAB" --> Data for CETAB localisation
@@ -105,7 +105,7 @@ int main(int argc, char *argv[]) {
 	FILE *fptr;
 	
 	// Ajout ************************************
-	char path_and_filename_for_database_insertion[STRING_BUFF_LEN];
+	char path_and_filename_for_database_insertion[LONG_STRING_BUFF_LEN];
 	FILE *fptr_for_database_insertion;
 	// ********************************************
 
@@ -169,9 +169,10 @@ int main(int argc, char *argv[]) {
 
 		// **** Ajout
 		// Générer le nom de fichier
-		snprintf(path_and_filename_for_database_insertion, STRING_BUFF_LEN, "%s/%s.csv", argv[4], time(&time_current));
+		//snprintf(path_and_filename_for_database_insertion, STRING_BUFF_LEN, "%s/%s.csv", argv[4], time(&time_current));
+		generate_full_filename(path_and_filename_for_database_insertion, argv[4], LONG_STRING_BUFF_LEN);
 		fptr_for_database_insertion = fopen(path_and_filename_for_database_insertion, "w");
-		
+
 		if (fptr_for_database_insertion == NULL)
 		{
 			perror("Error ! Could not open file");
@@ -179,7 +180,7 @@ int main(int argc, char *argv[]) {
 			return EXIT_FAILURE;
 		}
 
-		write_file_header(fptr_for_database_insertion, measurements_table, nb_of_measurements)
+		write_file_header(fptr_for_database_insertion, measurements_table, nb_of_measurements);
 
 		// ********************************
 
@@ -221,7 +222,7 @@ int main(int argc, char *argv[]) {
 		fclose(fptr);
 
 		// Ajout *************************** 
-		fprintf(fptr_for_database_insertion,"\n");
+		//fprintf(fptr_for_database_insertion,"\n");
 		fclose(fptr_for_database_insertion);
 		// Fin ajout *********************************
 

@@ -17,11 +17,13 @@ BITRATE="125000" #kbits/second. This should match what's in the sensor module fi
 
 # Secondly, let's define where we want the program to put the datalogging files, and how often to take a sample
 LOCAL_DATALOGGING_PATH="/home/elaine/Documents/AcqData"
+LOCAL_SERVER_DATALOGGING_PATH="/home/elaine/Documents/CETAB"
 DATALOGGING_SAMPLE_PERIOD="60" #seconds. Time interval between data samples from the sensors
 
 # Thirdly, let's define where, and how often the files are copied to the cloud
 REMOTE_NAME="onedriveElaine" # This is the name of the (previously configured) remote cloud we want rclone to put the files on.
 REMOTE_PATH="/AcqData/" # This is where we want rclone to put the files on the remote cloud.
+REMOTE_PATH_SERVER="/AcqData/CETAB_DATABASE"
 REMOTE_UPLOAD_PERIOD="300" #seconds. This is the amount of time between each uploads to the remote cloud.
 
 # Boilerplate to change the directory of execution to the directory where this script is
@@ -35,8 +37,9 @@ sudo ip link set $INTERFACE type can bitrate $BITRATE
 sudo ip link set up $INTERFACE
 
 # Then, start the sript that syncs to the cloud in a new terminal
-gnome-terminal -- ./script_synctocloud.sh $LOCAL_DATALOGGING_PATH $REMOTE_NAME $REMOTE_PATH $REMOTE_UPLOAD_PERIOD
+# ajout des deux derniers parametres
+gnome-terminal -- ./script_synctocloud.sh $LOCAL_DATALOGGING_PATH $REMOTE_NAME $REMOTE_PATH $REMOTE_UPLOAD_PERIOD $REMOTE_PATH_SERVER $LOCAL_SERVER_DATALOGGING_PATH 
 
 # Finally, start the datalogging program
-./CAN-Acquisition-Module_Server $INTERFACE $DATALOGGING_SAMPLE_PERIOD $LOCAL_DATALOGGING_PATH 
+./CAN-Acquisition-Module_Server $INTERFACE $DATALOGGING_SAMPLE_PERIOD $LOCAL_DATALOGGING_PATH $LOCAL_SERVER_DATALOGGING_PATH
 
